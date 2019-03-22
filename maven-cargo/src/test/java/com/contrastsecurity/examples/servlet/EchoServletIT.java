@@ -15,15 +15,15 @@ import org.junit.jupiter.api.Test;
  * server running on localhost:8080 and verifies that it echoes the input in its response.
  */
 final class EchoServletIT {
-  @Test
-  void it_echoes_a_message() throws IOException {
-    final URLConnection connection =
-        new URL("http://localhost:8080/echo?message=foo").openConnection();
+    @Test
+    void it_echoes_a_message() throws IOException {
+        final URLConnection connection =
+            new URL("http://localhost:8080/echo?message=foo").openConnection();
 
-    try (final InputStream responseStream = connection.getInputStream();
-        final Scanner scanner = new Scanner(responseStream)) {
-      assertEquals("<body><h1>foo</h1></body>", scanner.nextLine());
-      assertFalse(scanner.hasNext());
+        try (final InputStream responseStream = connection.getInputStream();
+            final Scanner scanner = new Scanner(responseStream)) {
+            assertEquals("<body><h1>foo</h1></body>", scanner.nextLine());
+            assertFalse(scanner.hasNext());
+        }
     }
-  }
 }

@@ -13,7 +13,8 @@
   <url>https://github.com/Contrast-Security-OSS/contrast-java-examples</url>
 
   <properties>
-    <!-- add contrast version properties here in Step 5. -->
+    <contrast.version>3.6.3</contrast.version>
+    <contrast.build>8220</contrast.build>
   </properties>
 
   <dependencies>
@@ -102,6 +103,17 @@
               <goal>start</goal>
             </goals>
             <phase>pre-integration-test</phase>
+            <configuration>
+              <configuration>
+                <properties>
+                  <cargo.jvmargs>
+                    -javaagent:${project.build.directory}/dependency/contrast-agent-${contrast.version}.jar
+                    -Dcontrast.config.path=${user.home}/.contrast.yml
+                    -Dcontrast.application.name=maven-cargo-how-to
+                  </cargo.jvmargs>
+                </properties>
+              </configuration>
+            </configuration>
           </execution>
           <execution>
             <id>stop-app-after-IT</id>
@@ -112,7 +124,28 @@
           </execution>
         </executions>
       </plugin>
-      <!-- Add additional plugins here -->
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.contrastsecurity</groupId>
+                  <artifactId>contrast-agent</artifactId>
+                  <version>${contrast.version}.${contrast.build}</version>
+                  <destFileName>contrast-agent-${contrast.version}.jar</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
