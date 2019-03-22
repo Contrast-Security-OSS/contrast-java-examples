@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "format": "prettier --write --prose-wrap=always \"**/*.md\"",
+    "test": "prettier --check --prose-wrap=always \"**/*.md\""
+  },
+  "dependencies": {
+    "prettier": "^1.16.4"
+  }
+}

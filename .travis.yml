@@ -1,0 +1,9 @@
+dist: trusty
+jdk:
+  - oraclejdk8
+node_js:
+  - node
+cache: yarn
+script:
+  - yarn test
+  - cd $TRAVIS_BUILD_DIR/maven-cargo && ./mvnw verify
