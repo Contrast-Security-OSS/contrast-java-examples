@@ -1,0 +1,43 @@
+// add additional import statements here in Step 7
+
+plugins {
+    id "application"
+    id "com.github.sherter.google-java-format" version "0.8"
+    // add the docker remote api plugin here in Step 7
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.glassfish.grizzly:grizzly-http-server:2.4.4"
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.4.1"
+    testCompile "org.mockito:mockito-core:2.25.1"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.4.1"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.1"
+    // add additional test dependencies here in Step 6
+}
+
+application {
+    mainClassName = "com.contrastsecurity.examples.grizzly.App"
+    
+    // add Contrast application configuraiton here in Step 9
+    
+    // add distribution config here in Step 10
+    
+    // add start script configuration here in Step 10
+}
+
+// add Docker task definitions here in Step 7
+
+// add integration test task here in Step 6
+
+test {
+    useJUnitPlatform()
+}
+
+verifyGoogleJavaFormat {
+    // ignore formatting errors in order to simplify the how-to
+    ignoreFailures true
+}

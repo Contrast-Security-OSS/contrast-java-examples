@@ -6,6 +6,8 @@
 *.iml
 node_modules
 target
+.gradle
+build
 
 # Compiled class file
 *.class

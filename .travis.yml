@@ -7,3 +7,4 @@ cache: yarn
 script:
   - yarn test
   - cd $TRAVIS_BUILD_DIR/maven-cargo && ./mvnw verify
+  - cd $TRAVIS_BUILD_DIR/gradle-application && ./gradlew check
