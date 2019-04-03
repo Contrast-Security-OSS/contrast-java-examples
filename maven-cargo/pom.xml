@@ -13,7 +13,7 @@
   <url>https://github.com/Contrast-Security-OSS/contrast-java-examples</url>
 
   <properties>
-    <!-- add contrast version properties here in Step 7. -->
+    <!-- add contrast version properties here in Step 5. -->
   </properties>
 
   <dependencies>
@@ -65,6 +65,52 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <version>1.7.3</version>
+        <configuration>
+          <container>
+            <containerId>jetty9x</containerId>
+          </container>
+          <deployables>
+            <deployable>
+              <artifactId>contrast-maven-cargo</artifactId>
+              <properties>
+                <context>/</context>
+              </properties>
+            </deployable>
+          </deployables>
+        </configuration>
+        <executions>
+          <execution>
+            <id>start-app-before-IT</id>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <phase>pre-integration-test</phase>
+          </execution>
+          <execution>
+            <id>stop-app-after-IT</id>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+          </execution>
+        </executions>
       </plugin>
       <!-- Add additional plugins here -->
     </plugins>
