@@ -1,14 +1,32 @@
-// add additional import statements here in Step 7
+import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerRemoveContainer
+import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.Dockerfile
+
+import java.nio.file.Paths
 
 plugins {
     id "application"
     id "com.github.sherter.google-java-format" version "0.8"
-    // add the docker remote api plugin here in Step 7
+    id "com.bmuschko.docker-remote-api" version "4.6.2"
 }
 
 repositories {
     mavenCentral()
 }
+
+sourceSets {
+    intTest {}
+}
+
+configurations {
+    intTestImplementation.extendsFrom implementation
+    intTestRuntimeOnly.extendsFrom runtimeOnly
+
+    // add Contrast configuration here in Step 5
+}
+
 
 dependencies {
     compile "org.glassfish.grizzly:grizzly-http-server:2.4.4"
@@ -16,22 +34,74 @@ dependencies {
     testCompile "org.mockito:mockito-core:2.25.1"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.4.1"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.1"
-    // add additional test dependencies here in Step 6
+
+    intTestImplementation "org.junit.jupiter:junit-jupiter-api:5.4.1"
+    intTestRuntimeOnly "org.junit.platform:junit-platform-launcher:1.4.1"
+    intTestImplementation "org.junit.jupiter:junit-jupiter-engine:5.4.1"
 }
 
 application {
     mainClassName = "com.contrastsecurity.examples.grizzly.App"
-    
-    // add Contrast application configuraiton here in Step 9
-    
-    // add distribution config here in Step 10
-    
-    // add start script configuration here in Step 10
+
+    // add Contrast application configuration here in Step 6
+
+    // add distribution config here in Step 7
+
+    // add start script configuration here in Step 7
 }
 
-// add Docker task definitions here in Step 7
+// add Contrast copy task here in Step 5
 
-// add integration test task here in Step 6
+task createDockerfile(type: Dockerfile) {
+    dependsOn assembleDist
+    destFile = Paths.get("${buildDir}", "Dockerfile").toFile()
+    from("openjdk:jre-alpine")
+    workingDir("/")
+    environmentVariable("CONTRAST_GRADLE_BIND_ADDR", "0.0.0.0")
+    copyFile("distributions/${project.name}.zip", "dist.zip")
+    runCommand("unzip dist.zip")
+    workingDir("${project.name}")
+    entryPoint("bin/${project.name}")
+    exposePort(8080)
+}
+
+task buildDockerImage(type: DockerBuildImage) {
+    dependsOn createDockerfile
+    inputDir = buildDir
+}
+
+task createContainer(type: DockerCreateContainer) {
+    dependsOn buildDockerImage
+    targetImageId buildDockerImage.getImageId()
+    portBindings = ['8080:8080']
+
+    // add Contrast configuration here in Step 7
+}
+
+task startContainer(type: DockerStartContainer) {
+    dependsOn createContainer
+    targetContainerId createContainer.getContainerId()
+}
+
+task removeContainer(type: DockerRemoveContainer) {
+    removeVolumes = true
+    force = true
+    targetContainerId startContainer.getContainerId()
+}
+
+task integrationTest(type: Test) {
+    description = "Test the application distributable."
+
+    testClassesDirs = sourceSets.intTest.output.classesDirs
+    classpath = sourceSets.intTest.runtimeClasspath
+
+    useJUnitPlatform()
+
+    dependsOn startContainer
+    finalizedBy removeContainer
+}
+
+assemble.dependsOn integrationTest
 
 test {
     useJUnitPlatform()
