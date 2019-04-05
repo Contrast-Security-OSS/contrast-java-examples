@@ -14,10 +14,12 @@ final class App {
   public static void main(final String[] args) throws IOException, InterruptedException {
     String bindAddress = System.getenv("CONTRAST_GRADLE_BIND_ADDR");
     bindAddress = bindAddress == null ? "localhost" : bindAddress;
+    final int port = 8080;
+    final String path = "/echo";
 
-    final HttpServer server = HttpServer.createSimpleServer(".", bindAddress, 8080);
+    final HttpServer server = HttpServer.createSimpleServer(".", bindAddress, port);
     final ServerConfiguration configuration = server.getServerConfiguration();
-    configuration.addHttpHandler(ECHO_HANDLER, "/echo");
+    configuration.addHttpHandler(ECHO_HANDLER, path);
 
     Runtime.getRuntime()
         .addShutdownHook(
@@ -29,7 +31,8 @@ final class App {
                 "shutdownHook"));
 
     server.start();
-    System.out.println("Server listening on 8080");
+    System.out.println(
+        "Server listening for messages at http://" + bindAddress + ":" + port + path);
     Thread.currentThread().join();
   }
 
