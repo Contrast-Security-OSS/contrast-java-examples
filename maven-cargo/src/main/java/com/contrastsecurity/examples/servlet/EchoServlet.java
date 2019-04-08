@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * An intentionally insecure {@link HttpServlet} for demonstrating how to integrate a project with
- * the Contrast agent
+ * An intentionally vulnerable {@link HttpServlet} for demonstrating how to integrate a project with
+ * the Contrast agent. This code is vulnerable to a Cross-Site Scripting (XSS) attack.
  */
 @WebServlet("/echo")
 public final class EchoServlet extends HttpServlet {
@@ -25,6 +25,8 @@ public final class EchoServlet extends HttpServlet {
     response.setStatus(200);
     response.setContentType("text/html");
     response.setCharacterEncoding("UTF-8");
+    // message is not sanitized before being written to the response and therefore may is an XSS
+    // attack vector
     response.getWriter().println("<body><h1>" + message + "</h1></body>");
   }
 }
