@@ -261,7 +261,7 @@ task integrationTest(type: Test) {
     classpath = sourceSets.intTest.runtimeClasspath
 
     useJUnitPlatform()
-    
+
     // add task dependencies here in Step 7
 }
 
@@ -328,7 +328,7 @@ task createContainer(type: DockerCreateContainer) {
     dependsOn buildDockerImage
     targetImageId buildDockerImage.getImageId()
     portBindings = ['8080:8080']
-    
+
     // add Contrast configuration here in Step 10
 }
 

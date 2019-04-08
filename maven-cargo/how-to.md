@@ -3,10 +3,10 @@
 This how-to walks a Java developer through the necessary steps to add the
 Contrast Java Agent to an existing Maven project and reuse the project's
 existing integration tests to find vulnerabilities. It guides you through making
-changes to an [example servlet
-project](https://github.com/Contrast-Security-OSS/contrast-java-examples/maven-cargo).
-A completed version of the project [exists in a git
-branch](https://github.com/Contrast-Security-OSS/contrast-java-examples/tree/maven-cargo-complete/maven-cargo).
+changes to an
+[example servlet project](https://github.com/Contrast-Security-OSS/contrast-java-examples/maven-cargo).
+A completed version of the project
+[exists in a git branch](https://github.com/Contrast-Security-OSS/contrast-java-examples/tree/maven-cargo-complete/maven-cargo).
 
 ## Prerequisites
 
@@ -14,8 +14,8 @@ branch](https://github.com/Contrast-Security-OSS/contrast-java-examples/tree/mav
    [Java 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 1. Install [git](https://git-scm.com/)
 1. [Contrast Account](https://app.contrastsecurity.com) connection information.
-   If you do not have a Contrast account, create a [free Community
-   Edition](https://www.contrastsecurity.com/contrast-community-edition)
+   If you do not have a Contrast account, create a
+   [free Community Edition](https://www.contrastsecurity.com/contrast-community-edition)
    account.
 
 ## Step 1 - Obtain Contrast Account Information
@@ -52,8 +52,9 @@ api:
 ```
 
 Replace `<contrast_url>`, `<your_api_key>`, `<agent_user_name>` and
-`<agent_user_service_key>` with the values you [obtained from the Contrast
-UI](#step-1---obtain-contrast-account-information). Save the file.
+`<agent_user_service_key>` with the values you
+[obtained from the Contrast UI](#step-1---obtain-contrast-account-information).
+Save the file.
 
 <details><summary><b>Configuration Tip</b></summary>
 <p>You can
