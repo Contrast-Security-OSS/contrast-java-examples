@@ -5,6 +5,7 @@ node_js:
   - node
 cache: yarn
 script:
+  - yarn install
   - yarn test
-  - cd $TRAVIS_BUILD_DIR/maven-cargo && ./mvnw verify
-  - cd $TRAVIS_BUILD_DIR/gradle-application && ./gradlew check
+  - cd $TRAVIS_BUILD_DIR/maven-cargo && ./mvnw --batch-mode verify
+  - cd $TRAVIS_BUILD_DIR/gradle-docker && ./gradlew check
