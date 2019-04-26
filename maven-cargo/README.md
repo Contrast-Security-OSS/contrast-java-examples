@@ -1,9 +1,10 @@
-# Contrast Java Agent, Maven Cargo Example
+# Contrast Java Agent, Maven Example
 
-This module contains example code to
-[compliment the how-to article](https://docs.contrastsecurity.com/link/to/article/when/available)
-that demonstrates how to configure a Maven project to use Contrast.
+This module contains example code to compliment the
+[Add the Agent to a Maven Project article](https://docs.contrastsecurity.com/installation-javapackage.html#maven)
+which demonstrates how to configure a Maven project to use Contrast from Maven
+Central.
 
-There
-[is a branch](https://github.com/Contrast-Security-OSS/contrast-java-examples/tree/maven-cargo-complete/maven-cargo)
-that shows the results after completing the instructions in the how-to.
+The
+[maven-cargo-complete branch](https://github.com/Contrast-Security-OSS/contrast-java-examples/tree/maven-cargo-complete/maven-cargo)
+shows the results after completing the instructions in the article.
