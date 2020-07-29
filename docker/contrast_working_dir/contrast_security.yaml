@@ -1,0 +1,23 @@
+api:
+  url: https:/ce.contrastsecurity.com/Contrast
+  # api_key: NEEDS_TO_BE_SET
+  # service_key: NEEDS_TO_BE_SET
+  # user_name: NEEDS_TO_BE_SET
+agent:
+  logger:
+    # path: ./contrast_agent.log
+    level: INFO
+    # stdout: NEEDS_TO_BE_SET
+    # stderr: NEEDS_TO_BE_SET
+  security_logger:
+    path: ./security.log
+    level: INFO
+  java:
+    # standalone_app_name: NEEDS_TO_BE_SET
+assess:
+  enable: true
+protect:
+  enable: false
+server:
+  name: webgoat7-server
+  environment: development
