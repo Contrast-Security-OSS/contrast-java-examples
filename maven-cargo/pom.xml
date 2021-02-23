@@ -84,6 +84,15 @@
         <artifactId>cargo-maven3-plugin</artifactId>
         <version>1.9.0</version>
         <configuration>
+          <configuration>
+            <properties>
+              <cargo.start.jvmargs>
+                -javaagent:${project.build.directory}/dependency/contrast-agent-${contrast.version}.jar
+                -Dcontrast.config.path=${user.home}/.contrast.yml
+                -Dcontrast.application.name=maven-cargo-how-to
+              </cargo.start.jvmargs>
+            </properties>
+          </configuration>
           <container>
             <containerId>jetty9x</containerId>
           </container>
@@ -103,17 +112,6 @@
               <goal>start</goal>
             </goals>
             <phase>pre-integration-test</phase>
-            <configuration>
-              <configuration>
-                <properties>
-                  <cargo.jvmargs>
-                    -javaagent:${project.build.directory}/dependency/contrast-agent-${contrast.version}.jar
-                    -Dcontrast.config.path=${user.home}/.contrast.yml
-                    -Dcontrast.application.name=maven-cargo-how-to
-                  </cargo.jvmargs>
-                </properties>
-              </configuration>
-            </configuration>
           </execution>
           <execution>
             <id>stop-app-after-IT</id>
@@ -126,7 +124,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.1.2</version>
         <executions>
           <execution>
             <phase>prepare-package</phase>
