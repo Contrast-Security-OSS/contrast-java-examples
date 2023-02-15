@@ -4,12 +4,10 @@ import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
 
-import java.nio.file.Paths
-
 plugins {
     id "application"
-    id "com.github.sherter.google-java-format" version "0.8"
-    id "com.bmuschko.docker-remote-api" version "4.6.2"
+    id "com.github.sherter.google-java-format" version "0.9"
+    id "com.bmuschko.docker-remote-api" version "9.2.1"
 }
 
 repositories {
@@ -23,59 +21,63 @@ sourceSets {
 configurations {
     intTestImplementation.extendsFrom implementation
     intTestRuntimeOnly.extendsFrom runtimeOnly
-
-    // add Contrast configuration here in Step 5
 }
 
 
 dependencies {
-    compile "org.glassfish.grizzly:grizzly-http-server:2.4.4"
-    testCompile "org.junit.jupiter:junit-jupiter-api:5.4.1"
-    testCompile "org.mockito:mockito-core:2.25.1"
-    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.4.1"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.4.1"
+    implementation "org.glassfish.grizzly:grizzly-http-server:2.4.4"
 
-    intTestImplementation "org.junit.jupiter:junit-jupiter-api:5.4.1"
-    intTestRuntimeOnly "org.junit.platform:junit-platform-launcher:1.4.1"
-    intTestImplementation "org.junit.jupiter:junit-jupiter-engine:5.4.1"
+    testImplementation platform("org.junit:junit-bom:5.9.2")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+    testImplementation "org.mockito:mockito-core:2.25.1"
+
+    intTestImplementation platform("org.junit:junit-bom:5.9.2")
+    intTestImplementation "org.junit.jupiter:junit-jupiter-api"
+    intTestRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    intTestImplementation "org.junit.jupiter:junit-jupiter-engine"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(19)
+    }
 }
 
 application {
     mainClassName = "com.contrastsecurity.examples.grizzly.App"
-
-    // add Contrast application configuration here in Step 6
-
-    // add distribution config here in Step 7
-
-    // add start script configuration here in Step 7
 }
 
-// add Contrast copy task here in Step 5
-
 task createDockerfile(type: Dockerfile) {
-    dependsOn assembleDist
-    destFile = Paths.get("${buildDir}", "Dockerfile").toFile()
-    from("openjdk:jre-alpine")
+    from("eclipse-temurin:19")
     workingDir("/")
     environmentVariable("CONTRAST_GRADLE_BIND_ADDR", "0.0.0.0")
-    copyFile("distributions/${project.name}.zip", "dist.zip")
-    runCommand("unzip dist.zip")
+    addFile("${distTar.archiveFileName.get()}", "/")
     workingDir("${project.name}")
     entryPoint("bin/${project.name}")
     exposePort(8080)
+
+    // Add the Contrast Agent and configure the application to use it here, in step 8
 }
 
 task buildDockerImage(type: DockerBuildImage) {
     dependsOn createDockerfile
-    inputDir = buildDir
+    dependsOn "copyDist"
+}
+
+task copyDist(type: Copy) {
+    from distTar
+    into buildDockerImage.inputDir
 }
 
 task createContainer(type: DockerCreateContainer) {
     dependsOn buildDockerImage
     targetImageId buildDockerImage.getImageId()
-    portBindings = ['8080:8080']
+    hostConfig.portBindings = ['8080:8080']
 
-    // add Contrast configuration here in Step 7
+    // add Contrast configuration here in Step 9
 }
 
 task startContainer(type: DockerStartContainer) {
