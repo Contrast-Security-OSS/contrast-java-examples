@@ -59,7 +59,8 @@ task createDockerfile(type: Dockerfile) {
     entryPoint("bin/${project.name}")
     exposePort(8080)
 
-    // Add the Contrast Agent and configure the application to use it here, in step 8
+    copyFile(new Dockerfile.CopyFile("/contrast/contrast-agent.jar", "/contrast.jar").withStage("contrast/agent-java:latest"))
+    environmentVariable("JAVA_TOOL_OPTIONS", "-javaagent:/contrast.jar")
 }
 
 task buildDockerImage(type: DockerBuildImage) {
@@ -77,7 +78,13 @@ task createContainer(type: DockerCreateContainer) {
     targetImageId buildDockerImage.getImageId()
     hostConfig.portBindings = ['8080:8080']
 
-    // add Contrast configuration here in Step 9
+    envVars = [
+            CONTRAST__API__URL: project.property("contrastUrl"),
+            CONTRAST__API__USER_NAME: project.property("contrastAgentUserName"),
+            CONTRAST__API__SERVICE_KEY: project.property("contrastAgentServiceKey"),
+            CONTRAST__API__API_KEY: project.property("contrastApiKey"),
+            CONTRAST__APPLICATION__NAME: "${project.name}-how-to"
+    ]
 }
 
 task startContainer(type: DockerStartContainer) {
